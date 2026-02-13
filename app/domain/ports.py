@@ -1,17 +1,32 @@
 from __future__ import annotations
 
-from typing import Protocol
+from dataclasses import dataclass, field
+from typing import Any, Protocol
 
 
-class AIQualityReviewer(Protocol):
-    """Port for content quality review."""
+@dataclass(slots=True)
+class ReviewResult:
+    score: float
+    label: str
+    reason: str
+    model: str
+    prompt_version: str
+    raw_response: dict[str, Any] = field(default_factory=dict)
 
-    def review(self, title: str, body: str) -> tuple[float, str]:
+
+@dataclass(slots=True)
+class ResourceItem:
+    title: str
+    url: str
+    summary: str
+    raw: dict[str, Any] = field(default_factory=dict)
+
+
+class ReviewerBackend(Protocol):
+    def review(self, title: str, body: str, metadata: dict[str, Any]) -> ReviewResult:
         ...
 
 
-class ResourceCrawler(Protocol):
-    """Port for fetching external learning resources."""
-
-    def fetch_latest(self) -> tuple[str, str, str]:
+class CrawlerBackend(Protocol):
+    def fetch_latest(self, topic: str, limit: int) -> list[ResourceItem]:
         ...

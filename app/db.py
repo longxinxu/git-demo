@@ -18,7 +18,7 @@ def get_engine():
 
 @contextmanager
 def get_session() -> Session:
-    SessionLocal = sessionmaker(bind=get_engine(), autoflush=False, autocommit=False, future=True)
+    SessionLocal = sessionmaker(bind=get_engine(), autoflush=False, autocommit=False, expire_on_commit=False, future=True)
     session = SessionLocal()
     try:
         yield session

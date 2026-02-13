@@ -10,7 +10,7 @@ def build_resource_router(service: ContentService) -> APIRouter:
 
     @router.post("/trigger-sync")
     async def trigger_sync():
-        reviewed = service.sync_latest_resource()
-        return {"message": "sync complete", "reviewed": reviewed}
+        result = service.sync_latest_resource()
+        return {"message": "sync complete", "reviewed": result["reviewed"], "fetched": result["fetched"], "trace_id": result["trace_id"]}
 
     return router
