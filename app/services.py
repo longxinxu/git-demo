@@ -46,7 +46,7 @@ class ContentRepository:
     def review_pending(self, reviewer: AIQualityReviewer) -> int:
         with get_conn() as conn:
             rows = conn.execute(
-                "SELECT id, title, body FROM contents WHERE status IN ('pending', 'needs_improvement')"
+                "SELECT id, title, body FROM contents WHERE status = 'pending'"
             ).fetchall()
             updated = 0
             for row in rows:
