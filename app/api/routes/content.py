@@ -30,7 +30,7 @@ def build_content_router(service: ContentService, templates: Jinja2Templates) ->
         summary: str = Form(...),
         body: str = Form(...),
     ):
-        service.submit_content(title=title, category=category, summary=summary, body=body)
-        return RedirectResponse(url="/", status_code=303)
+        result = service.submit_content(title=title, category=category, summary=summary, body=body)
+        return RedirectResponse(url=f"/?trace_id={result['trace_id']}", status_code=303)
 
     return router

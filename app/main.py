@@ -10,8 +10,7 @@ from fastapi.templating import Jinja2Templates
 from app.api.routes.content import build_content_router
 from app.api.routes.resource import build_resource_router
 from app.db import init_db
-from app.infra.crawlers.mock_crawler import MockResourceCrawler
-from app.infra.reviewers.mock_reviewer import MockAIQualityReviewer
+from app.infra.factory import build_crawler, build_reviewer
 from app.repositories.content_repo import ContentRepository
 from app.services.content_service import ContentService
 
@@ -20,8 +19,8 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 repo = ContentRepository()
-reviewer = MockAIQualityReviewer()
-crawler = MockResourceCrawler()
+reviewer = build_reviewer()
+crawler = build_crawler()
 content_service = ContentService(repo=repo, reviewer=reviewer, crawler=crawler)
 
 app.include_router(build_content_router(content_service, templates))

@@ -117,6 +117,31 @@ class ResourceUpdate(Base):
     fetched_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class ReviewLog(Base):
+    __tablename__ = "review_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    trace_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    content_item_id: Mapped[int | None] = mapped_column(ForeignKey("content_items.id", ondelete="SET NULL"))
+    backend: Mapped[str] = mapped_column(String(40), nullable=False)
+    request_payload: Mapped[str] = mapped_column(Text, nullable=False)
+    response_payload: Mapped[str] = mapped_column(Text, nullable=False)
+    error_code: Mapped[str | None] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class CrawlerLog(Base):
+    __tablename__ = "crawler_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    trace_id: Mapped[str] = mapped_column(String(64), nullable=False)
+    backend: Mapped[str] = mapped_column(String(40), nullable=False)
+    request_payload: Mapped[str] = mapped_column(Text, nullable=False)
+    response_payload: Mapped[str] = mapped_column(Text, nullable=False)
+    error_code: Mapped[str | None] = mapped_column(String(80))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
 class ContentItemSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
