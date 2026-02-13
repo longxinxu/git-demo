@@ -23,5 +23,6 @@ uvicorn app.main:app --reload
 1. 将 `AIQualityReviewer` 替换为真实模型调用（OpenAI/Anthropic/自建模型）
 2. 将 `ResourceCrawler` 替换为搜索 API（SerpAPI/Tavily/自建爬虫）
 3. 增加用户认证与权限控制
-4. 增加内容版本历史、举报机制、审核工作台
+4. ✅ 已引入 content_items/content_versions + reviews/reports/tag/favorites 数据模型
 5. 增加 RAG 检索与学习路径推荐
+6. 使用 migrations/001_content_refactor.sql 管理结构迁移与旧数据回填
