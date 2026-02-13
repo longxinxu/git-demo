@@ -4,68 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Coding 学习平台</title>
-    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <header class="hero">
-      <h1>AI Coding 学习平台</h1>
-      <p>聚合 AI 开发工具核心教程、实战案例、技能地图，并支持用户共建内容。</p>
-    </header>
-
-    <section class="stats">
-      <div class="card"><strong>{{ stats.total }}</strong><span>内容总数</span></div>
-      <div class="card"><strong>{{ stats.approved }}</strong><span>已审核通过</span></div>
-      <div class="card"><strong>{{ stats.pending }}</strong><span>待优化/待审核</span></div>
-      <div class="card"><strong>{{ stats.last_sync }}</strong><span>最近同步</span></div>
-    </section>
-
-    <main class="grid">
-      <section>
-        <h2>学习内容库</h2>
-        {% for item in contents %}
-        <article class="content-card">
-          <div class="row">
-            <span class="tag">{{ item.category }}</span>
-            <span class="status {{ item.status }}">{{ item.status }}</span>
-          </div>
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.summary }}</p>
-          <small>质量分：{{ item.quality_score }} | 来源：{{ item.source }}</small>
-        </article>
-        {% endfor %}
-      </section>
-
-      <aside>
-        <section class="panel">
-          <h2>上传你的内容</h2>
-          <form action="/upload" method="post" class="upload-form">
-            <input type="text" name="title" placeholder="标题" required />
-            <select name="category">
-              <option>工具教程</option>
-              <option>实战案例</option>
-              <option>skills</option>
-            </select>
-            <input type="text" name="summary" placeholder="摘要" required />
-            <textarea name="body" rows="6" placeholder="输入正文，系统将自动进行 AI 质量审查" required></textarea>
-            <button type="submit">提交内容</button>
-          </form>
-        </section>
-
-        <section class="panel">
-          <h2>网络优质资源更新</h2>
-          <button id="sync-btn">立即同步</button>
-          <ul>
-            {% for update in updates %}
-            <li>
-              <a href="{{ update.url }}" target="_blank">{{ update.title }}</a>
-              <p>{{ update.summary }}</p>
-            </li>
-            {% endfor %}
-          </ul>
-        </section>
-      </aside>
-    </main>
-
-    <script src="/static/app.js"></script>
+    <div id="root">
+      <h1>前端已迁移到 React 工程</h1>
+      <p>请在 <code>frontend/</code> 目录运行 Vite 前端（开发模式）并通过 FastAPI 的 <code>/api/*</code> 接口访问数据。</p>
+    </div>
   </body>
 </html>
