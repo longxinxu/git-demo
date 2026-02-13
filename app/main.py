@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 
 from app.api.routes.content import build_content_router
 from app.api.routes.resource import build_resource_router
+from app.api.routes.api import build_api_router
 from app.db import init_db
 from app.infra.crawlers.mock_crawler import MockResourceCrawler
 from app.infra.reviewers.mock_reviewer import MockAIQualityReviewer
@@ -26,6 +27,7 @@ content_service = ContentService(repo=repo, reviewer=reviewer, crawler=crawler)
 
 app.include_router(build_content_router(content_service, templates))
 app.include_router(build_resource_router(content_service))
+app.include_router(build_api_router(content_service))
 
 
 async def scheduler_loop() -> None:

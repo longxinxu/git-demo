@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sqlite3
 from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
@@ -28,6 +29,17 @@ def get_session() -> Session:
         raise
     finally:
         session.close()
+
+
+@contextmanager
+def get_conn():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    try:
+        yield conn
+        conn.commit()
+    finally:
+        conn.close()
 
 
 def _table_exists(session: Session, table_name: str) -> bool:
@@ -85,9 +97,62 @@ def _migrate_legacy_contents(session: Session) -> None:
     session.execute(text("DROP TABLE IF EXISTS contents"))
 
 
+def _ensure_legacy_tables() -> None:
+    with get_conn() as conn:
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS contents (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                category TEXT NOT NULL,
+                summary TEXT NOT NULL,
+                body TEXT NOT NULL,
+                quality_score REAL DEFAULT 0,
+                status TEXT NOT NULL DEFAULT 'pending',
+                source TEXT NOT NULL DEFAULT 'user_upload',
+                created_at TEXT NOT NULL,
+                last_reviewed_at TEXT
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS resource_updates (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT NOT NULL,
+                url TEXT NOT NULL,
+                summary TEXT NOT NULL,
+                fetched_at TEXT NOT NULL
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS favorites (
+                user_id INTEGER NOT NULL,
+                content_item_id INTEGER NOT NULL,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (user_id, content_item_id)
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS reports (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content_item_id INTEGER NOT NULL,
+                user_id INTEGER,
+                reason TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+
+
 def init_db() -> None:
     engine = get_engine()
     Base.metadata.create_all(engine)
     with Session(engine) as session:
         _migrate_legacy_contents(session)
         session.commit()
+    _ensure_legacy_tables()
