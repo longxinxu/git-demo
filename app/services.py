@@ -1,7 +1,6 @@
-from __future__ import annotations
+"""Backward-compatible service exports."""
 
-from datetime import datetime
-from random import randint
+from app.services.content_service import ContentService
 
 from sqlalchemy import func, select
 
@@ -179,3 +178,4 @@ class ResourceCrawler:
     def fetch_latest(self) -> tuple[str, str, str]:
         index = randint(0, len(self.curated) - 1)
         return self.curated[index]
+__all__ = ["ContentService"]
